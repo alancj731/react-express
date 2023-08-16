@@ -12,9 +12,10 @@ interface props {
     assignment: string,
     description: string,
     deadline: string,
+    note: string,
 }
 
-export default function InfoItem({course, instructor, assignment, description, deadline}: props) {
+export default function InfoItem({course, instructor, assignment, deadline, description, note}: props) {
     // if (deadline === ""){
     //     console.log("empty deadline")
     // } else {
@@ -43,10 +44,10 @@ export default function InfoItem({course, instructor, assignment, description, d
             </span>
         </Segment>    
         <Segment >
-            {description}
+            {description !== "None" ? `Description: ${note}` : 'Description:'}
         </Segment>
         <Segment clearing>
-            <Header as="h4">Course: "{course}"</Header>
+            {note !== "None" ? `Note: ${note}` : 'Note:'}
         </Segment>
     </SegmentGroup>
     )

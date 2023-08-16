@@ -14,7 +14,7 @@ const sleep = (delay: number) => {
 Axios.interceptors.response.use( async response => {
     try {
         await sleep(1000);
-        console.log("response successfully delayed");
+        // console.log("response successfully delayed");
         return response;
     } catch (error) {
         console.log(error);

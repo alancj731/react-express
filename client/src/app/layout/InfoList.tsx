@@ -13,58 +13,29 @@ import { observer } from "mobx-react-lite";
 
 export default observer(function InfoList() {
   const { infoitemStore } = useStore();
-  const { infoitems } = infoitemStore;
-  console.log("InfoList rendered", infoitems)
+  const { infoitems, filterMode } = infoitemStore;
 
-  // useEffect(() => {
-  //   if (infoitems.size === 0) {
-  //     loadInfoItems();
-  //   }
-  // }, [infoitems, loadInfoItems]);
+  function getDisplayItems(): InfoItemData[] {
+    if (filterMode.mode === "all") 
+      return infoitems
+    var daysToGo = filterMode.mode === "one_week" ? 7: 14
+    const startDay = new Date()
+    const endDay = new Date()
+    endDay.setDate(startDay.getDate() + daysToGo)
 
-  // console.log(getInfoItems, getInfoItems.length, infoitems, infoitems.size)
+    const filteredItems = infoitems.filter(item => {
+      const dueDay = new Date(item.deadline)
+      console.log(dueDay.getTime(), startDay.getTime(), endDay.getTime())
+     return dueDay.getTime() >= startDay.getTime() && dueDay.getTime() <= endDay.getTime()
+    })   
+    return filteredItems
+  }
 
-  // var InfoListData: InfoItemData[] = [
-  //   {
-  //     id: "1",
-  //     course: "course a",
-  //     deadline: "2023-08-14T18:09:43",
-  //     assignment: "ass 1",
-  //     instructor: "instructor a",
-  //     description: "some requirement",
-  //   },
-  //   {
-  //     id: "2",
-  //     course: "course b",
-  //     deadline: "2023-09-14T18:09:43",
-  //     assignment: "ass 2",
-  //     instructor: "instructor b",
-  //     description: "some requirement",
-  //   },
-  //   {
-  //     id: "3",
-  //     course: "course c",
-  //     deadline: "2023-10-14T18:09:43",
-  //     assignment: "ass 3",
-  //     instructor: "instructor c",
-  //     description: "some requirement",
-  //   },
-  // ];
-
-  // var InfoListData: InfoItemData[] = [];
-
-  // if (InfoListData.length === 0) {
-  //   console.log("empty data");
-  //   return (
-  //     <>
-  //       <h2>No assignment yet, try to check it later!</h2>
-  //     </>
-  //   );
-  // }
+  const displayItems = getDisplayItems()
 
   return (
     <>
-      {infoitems.map((item) => (
+      {displayItems.map((item) => (
         <Fragment key={item.id}>
           <Header sub color="teal" size="huge" >
             {item.course}
@@ -75,6 +46,7 @@ export default observer(function InfoList() {
             assignment={item.assignment}
             description={item.description}
             deadline= {item.deadline}
+            note = {item.note}
           />
         </Fragment>)
       )}

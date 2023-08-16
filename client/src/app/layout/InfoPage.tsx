@@ -1,4 +1,4 @@
-import { Container, Grid } from "semantic-ui-react";
+import { Container, Grid, Header } from "semantic-ui-react";
 import InfoList from "./InfoList";
 import InfoFilter from "./InfoFilter";
 
@@ -8,6 +8,8 @@ import { observer } from "mobx-react-lite";
 // import FetchCourseInfo from "../api/FetchCourseInfo";
 // import { InfoItemData } from "../models/InfoItemData";
 import LoadingComponent from "./LoadingComponet";
+import { runInAction } from "mobx";
+import { useEffect } from "react";
 
 export default observer(function InfoPage() {
   const { infoitemStore } = useStore();
@@ -15,7 +17,7 @@ export default observer(function InfoPage() {
 
   //const [data, setData] = useState(infoitems)
 
-  console.log("InfoPage rendered", infoitems, initialLoading, dataSize)
+  // console.log("InfoPage rendered", infoitems, initialLoading, dataSize)
 
   // useEffect(() => {
   //   if (infoitems.size === 0) {
@@ -54,13 +56,25 @@ export default observer(function InfoPage() {
   //     loadInfoItems()
   //   }
   // },[])
-  if (dataSize === 0) {
-    console.log("go to fetch data here!")
-    loadInfoItems()
-  }
+
+    useEffect(()=>{
+      loadInfoItems()
+    }, [])
+    
+
 
   if (initialLoading) {
     return <LoadingComponent content="Loading data..." inverted={true} />
+  }
+
+  if (dataSize === 0) {
+    return (
+      <>
+        <Header as= "h2" color="red">
+          No data available currently, please check it later!
+        </Header>
+      </>
+    )
   }
 
   return (
